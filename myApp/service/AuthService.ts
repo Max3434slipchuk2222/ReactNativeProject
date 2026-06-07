@@ -18,11 +18,7 @@ export const authService = createApi({
     }),
     tagTypes: ['Auth'],
     endpoints: (build) => ({
-        register: build.mutation<{
-            email: string,
-            id: number,
-            username: string,
-        }, IRegisterModel>({
+        register: build.mutation<{token : string}, IRegisterModel>({
             query: (model)=>{
                 const formData = serialize(model)
                 return {
