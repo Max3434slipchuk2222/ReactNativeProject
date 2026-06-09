@@ -22,8 +22,7 @@ export function ThemeIconButton({ size = 24 }: { size?: number }) {
     const isDark   = resolved === "dark";
 
     const handlePress = async () => {
-        const nextIndex = (CYCLE.indexOf(current) + 1) % CYCLE.length;
-        const next = CYCLE[nextIndex];
+        const next: ThemeMode = resolved === "light" ? "dark" : "light";
         dispatch(setThemeMode(next));
         await AsyncStorage.setItem("app_theme", next);
     };

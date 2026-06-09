@@ -10,7 +10,7 @@ export const ImagePickerButton: React.FC<ImagePickerButtonProps> =
         return (
             <TouchableOpacity
                 activeOpacity={0.8}
-                className={"w-36 h-36 rounded-full bg-emerald-500/10 items-center justify-center"}
+                className="w-36 h-36 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 items-center justify-center"
                 onPress={onPress}
             >
                 {imageUri ? (

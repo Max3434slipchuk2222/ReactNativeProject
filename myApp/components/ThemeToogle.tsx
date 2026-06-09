@@ -3,12 +3,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { setThemeMode, type ThemeMode } from "@/store/reducers/ThemeSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useColorScheme } from "react-native";
-
-const OPTIONS: { value: ThemeMode; icon: keyof typeof Ionicons.glyphMap }[] = [
+import { useColorScheme } from "@/hooks/use-color-scheme";
+const OPTIONS: { value: "light" | "dark"; icon: keyof typeof Ionicons.glyphMap }[] = [
     { value: "light",  icon: "sunny-outline"           },
     { value: "dark",   icon: "moon-outline"            },
-    { value: "system", icon: "phone-portrait-outline"  },
 ];
 
 export function ThemeToggle() {
@@ -19,7 +17,7 @@ export function ThemeToggle() {
     const resolved = current === "system" ? (systemScheme ?? "light") : current;
     const isDark   = resolved === "dark";
 
-    const handleSelect = async (mode: ThemeMode) => {
+    const handleSelect = async (mode: "light" | "dark") => {
         dispatch(setThemeMode(mode));
         await AsyncStorage.setItem("app_theme", mode);
     };
@@ -35,7 +33,7 @@ export function ThemeToggle() {
             }}
         >
             {OPTIONS.map(({ value, icon }) => {
-                const active = current === value;
+                const active = current === value || (current === "system" && resolved === value);
                 return (
                     <Pressable
                         key={value}

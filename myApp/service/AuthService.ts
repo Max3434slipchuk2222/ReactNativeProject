@@ -12,9 +12,8 @@ export const authService = createApi({
     reducerPath: 'authApi',
     baseQuery: fetchBaseQuery({
         baseUrl: `${BASE_URL}/Account/`,
-        prepareHeaders: async  (headers) => {
+        prepareHeaders: async (headers) => {
             const token = await SecureStore.getItemAsync("accessToken");
-            headers.set('Content-Type', 'application/json');
             if (token) {
                 headers.set("Authorization", `Bearer ${token}`);
             }
@@ -45,13 +44,18 @@ export const authService = createApi({
             }
         }),
         me: build.query<IMeModel, void>({
-            query: () => {
-                return {
-                    url: "Me",
-                    method: "GET",
-                }
-            }
-        })
+            query: () => ({ url: "Me", method: "GET" }),
+            transformResponse: (response: IMeModel) => ({
+                ...response,
+                image: response.image
+                    ? `${BASE_URL?.replace('/api', '')}/images/400_${response.image}`
+                    : null,
+            }),
+        }),
+        logout: build.mutation<void, void>({
+            query: () => ({ url: "Logout", method: "POST" }),
+            invalidatesTags: ["Auth"]
+        }),
     })
 })
 

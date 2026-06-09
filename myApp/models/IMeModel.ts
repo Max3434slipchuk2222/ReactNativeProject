@@ -3,5 +3,5 @@ export default interface IMeModel {
     dateCreated: string;
     fullName: string;
     email: string;
-    image: string;
+    image: string | null;
 }

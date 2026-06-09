@@ -163,7 +163,7 @@ export default function RegisterScreen() {
                                                    secureTextEntry
                                                    value={value}
                                                    onChangeText={onChange}
-                                                   className="w-full max-w-md bg-white rounded-lg px-4 py-3 mb-6 border border-gray-300"
+                                                   className="w-full max-w-md bg-white dark:bg-zinc-800 text-black dark:text-white rounded-lg px-4 py-3 mb-6 border border-gray-300 dark:border-zinc-700"
                                         />
                                     )}
                         />

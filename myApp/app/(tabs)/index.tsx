@@ -7,11 +7,13 @@ import { ThemedView } from '@/components/themed-view';
 import {Redirect, router} from 'expo-router';
 import { useAppSelector } from "@/store";
 import {useMeQuery} from "@/service/AuthService";
+import {useLogout} from "@/hooks/use-logout";
 // import LoggerScreen from "@/app/logger";
 
 export default function HomeScreen() {
     const auth = useAppSelector(x => x.auth);
     const { data: me, isLoading, isError } = useMeQuery();
+    const handleLogout = useLogout();
 
     if (auth == null) {
         return <Redirect href='/login' />;
@@ -22,7 +24,7 @@ export default function HomeScreen() {
             headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
             headerImage={
                 <Image
-                    source={{ uri: me?.image }}
+                    source={{ uri: me?.image ?? undefined }}
                     style={styles.profileImage}
                     contentFit="cover"
                 />
@@ -50,7 +52,7 @@ export default function HomeScreen() {
                     <ThemedView className="items-center pt-2 pb-4">
                         <View className="w-20 h-20 rounded-full overflow-hidden border-2 border-white shadow mb-3">
                             <Image
-                                source={{ uri: me.image }}
+                                source={{ uri: me.image ?? undefined }}
                                 style={{ width: 80, height: 80 }}
                                 contentFit="cover"
                             />
@@ -105,7 +107,12 @@ export default function HomeScreen() {
                                 })}
                             </ThemedText>
                         </ThemedView>
-
+                        <Pressable
+                            onPress={handleLogout}
+                            className="mx-4 mt-4 mb-4 rounded-xl bg-red-50 border border-red-200 py-3 items-center"
+                        >
+                            <Text className="text-red-600 font-semibold">Вийти з акаунту</Text>
+                        </Pressable>
                     </ThemedView>
                 </>
             )}

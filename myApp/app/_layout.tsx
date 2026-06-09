@@ -5,12 +5,38 @@ import 'react-native-reanimated';
 import '../global.css';
 import {useColorScheme} from '@/hooks/use-color-scheme';
 import {Provider} from "react-redux";
-import {store} from "@/store";
+import {store, useAppSelector} from "@/store";
 import * as SecureStore from 'expo-secure-store';
 import {loginSuccess} from "@/store/reducers/AuthSlice";
 import {useEffect, useState} from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {setThemeMode} from "@/store/reducers/ThemeSlice";
+import { useColorScheme as useNativeWindScheme } from 'nativewind';
 
+function AppContent() {
+    const themeMode = useAppSelector(s => s.themeReducer.mode);
+    const systemScheme = useColorScheme();
+    const { setColorScheme } = useNativeWindScheme();
+    const resolved: "light" | "dark" =
+        themeMode === 'system'
+            ? (systemScheme === 'dark' ? 'dark' : 'light')
+            : themeMode;
 
+    useEffect(() => {
+        setColorScheme(resolved);
+    }, [resolved]);
+    return (
+        <ThemeProvider value={resolved === 'dark' ? DarkTheme : DefaultTheme}>
+            <Stack>
+                <Stack.Screen name="(auth)" options={{headerShown: false}}/>
+                <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
+                <Stack.Screen name="modal" options={{presentation: 'modal'}}/>
+                <Stack.Screen name="logger" options={{headerShown: false}}/>
+            </Stack>
+            <StatusBar style={resolved === 'dark' ? 'light' : 'dark'}/>
+        </ThemeProvider>
+    );
+}
 export default function RootLayout() {
 
     //token
@@ -30,12 +56,11 @@ export default function RootLayout() {
             store.dispatch(loginSuccess(accessToken));
             // console.log("User info", accessToken);
         }
+        const savedTheme = await AsyncStorage.getItem('app_theme');
+        if (savedTheme === 'light' || savedTheme === 'dark') {
+            store.dispatch(setThemeMode(savedTheme));
+        }
     }
-
-
-    const colorScheme = useColorScheme();
-
-
 
     if (!storageReady) {
         return null;
@@ -44,15 +69,7 @@ export default function RootLayout() {
     return (
         <>
             <Provider store={store}>
-                <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-                    <Stack>
-                        <Stack.Screen name="(auth)" options={{headerShown: false}}/>
-                        <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
-                        <Stack.Screen name="modal" options={{presentation: 'modal', title: 'Modal'}}/>
-                        <Stack.Screen name="logger" options={{headerShown: false}}/>
-                    </Stack>
-                    <StatusBar style="auto"/>
-                </ThemeProvider>
+                <AppContent />
             </Provider>
 
         </>

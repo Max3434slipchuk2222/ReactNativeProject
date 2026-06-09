@@ -54,7 +54,7 @@ export default function LoginScreen() {
     // }
 
     return (
-        <View className="flex-1 justify-center bg-zinc-50 items-center px-6">
+        <View className="flex-1 justify-center bg-zinc-50 dark:bg-zinc-950 items-center px-6">
             <Text className="text-3xl font-bold text-blue-600 mb-8">
                 Увійти в акаунт
             </Text>
@@ -77,7 +77,7 @@ export default function LoginScreen() {
                                 value={value}
                                 onChangeText={onChange}
                                 placeholderClassName={"text-gray-600"}
-                                className="w-full max-w-md bg-white rounded-lg px-4 py-3 mb-4 border border-gray-300"
+                                className="w-full max-w-md bg-white dark:bg-zinc-800 text-black dark:text-white rounded-lg px-4 py-3 mb-4 border border-gray-300 dark:border-zinc-700"
                             />
                         )}
             />
@@ -90,7 +90,7 @@ export default function LoginScreen() {
                                        secureTextEntry
                                        value={value}
                                        onChangeText={onChange}
-                                       className="w-full max-w-md bg-white rounded-lg px-4 py-3 mb-6 border border-gray-300"
+                                       className="w-full max-w-md bg-white dark:bg-zinc-800 text-black dark:text-white rounded-lg px-4 py-3 mb-4 border border-gray-300 dark:border-zinc-700"
                             />
                         )}
             />
