@@ -1,8 +1,8 @@
 import {IImageFile} from "@/models/common/IImageFile";
 
 export default interface IRegisterModel {
-    firstname: string;
-    lastname: string;
+    firstName: string;
+    lastName: string;
     email: string;
     password: string;
     imageFile?: IImageFile;
