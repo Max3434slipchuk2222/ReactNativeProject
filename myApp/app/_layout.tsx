@@ -12,6 +12,7 @@ import {useEffect, useState} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {setThemeMode} from "@/store/reducers/ThemeSlice";
 import { useColorScheme as useNativeWindScheme } from 'nativewind';
+import {SafeAreaProvider, SafeAreaView} from "react-native-safe-area-context";
 
 function AppContent() {
     const themeMode = useAppSelector(s => s.themeReducer.mode);
@@ -26,10 +27,12 @@ function AppContent() {
         setColorScheme(resolved);
     }, [resolved]);
     return (
+
         <ThemeProvider value={resolved === 'dark' ? DarkTheme : DefaultTheme}>
             <Stack>
                 <Stack.Screen name="(auth)" options={{headerShown: false}}/>
                 <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
+                <Stack.Screen name="chat" options={{ headerShown: false }} />
                 <Stack.Screen name="modal" options={{presentation: 'modal'}}/>
                 <Stack.Screen name="logger" options={{headerShown: false}}/>
             </Stack>
@@ -68,10 +71,11 @@ export default function RootLayout() {
 
     return (
         <>
-            <Provider store={store}>
-                <AppContent />
-            </Provider>
-
+            <SafeAreaProvider>
+                <Provider store={store}>
+                    <AppContent />
+                </Provider>
+            </SafeAreaProvider>
         </>
 
     );

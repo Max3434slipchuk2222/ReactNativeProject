@@ -3,6 +3,7 @@ import {authService} from "@/service/AuthService";
 import authReducer from "./reducers/AuthSlice";
 import { type TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import themeReducer from "./reducers/ThemeSlice";
+
 const rootReducer = combineReducers({
     [authService.reducerPath]: authService.reducer,
     auth: authReducer,
