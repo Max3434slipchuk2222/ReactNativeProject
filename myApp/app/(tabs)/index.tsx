@@ -33,7 +33,7 @@ export default function HomeScreen() {
             headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
             headerImage={
                 <Image
-                    source={{ uri: me?.image ? `https://p32-native.itstep.click/images/1200_${me.image}` : undefined }}
+                    source={{ uri: me?.image ? `${me.image}` : undefined }}
                     style={styles.profileImage}
                     contentFit="cover"
                 />
@@ -76,7 +76,7 @@ export default function HomeScreen() {
                     <ThemedView className="items-center pt-2 pb-2">
                         <View className="w-20 h-20 rounded-full overflow-hidden border-2 border-white shadow mb-3">
                             <Image
-                                source={{ uri: me?.image ? `https://p32-native.itstep.click/images/200_${me.image}` : undefined }}
+                                source={{ uri: me?.image ? `${me.image}` : undefined }}
                                 style={styles.profileImage}
                                 contentFit="cover"
                             />
