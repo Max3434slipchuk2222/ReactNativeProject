@@ -115,6 +115,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ chatId }) => {
                         <Text className="text-white font-semibold">Редагувати</Text>
                     </TouchableOpacity>
                 )}
+
             </View>
 
             <ScrollView

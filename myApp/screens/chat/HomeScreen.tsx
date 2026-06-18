@@ -7,6 +7,7 @@ import {BASE_URL_IMAGES} from "@/api";
 import * as SecureStore from "expo-secure-store";
 import {logout} from "@/store/reducers/AuthSlice";
 import {authService} from "@/service/AuthService";
+import {ThemeToggle} from "@/components/ThemeToogle";
 
 export default function HomeScreen() {
     const {user} = useAppSelector(state => state.auth);
@@ -51,11 +52,6 @@ export default function HomeScreen() {
                         </Text>
 
                         <View className="h-[2px] w-12 bg-emerald-500 my-6 rounded-full"/>
-
-                        <Text
-                            className="text-zinc-500 dark:text-zinc-400 text-center text-lg leading-7 font-medium px-4">
-                            Обери, що хочеш зробити далі
-                        </Text>
                     </View>
 
                     <View className="items-center my-10">
@@ -102,7 +98,7 @@ export default function HomeScreen() {
 
                         <TouchableOpacity
                             activeOpacity={0.85}
-                            onPress={() => console.log('Join Chat')}
+                            onPress={() => router.push("/chat/join")}
                             className="border border-zinc-300 dark:border-zinc-700 py-4 rounded-2xl items-center"
                         >
                             <Text className="text-zinc-900 dark:text-zinc-100 text-lg font-semibold">
