@@ -8,15 +8,12 @@ import {
     FlatList,
     ActivityIndicator,
     KeyboardAvoidingView,
-    Platform, Pressable
+    Platform
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { HubConnectionBuilder, HubConnection, LogLevel } from "@microsoft/signalr";
-import {Ionicons} from "@expo/vector-icons";
-import {router} from "expo-router";
-import {useColorScheme} from "@/hooks/use-color-scheme";
-import {ThemeIconButton} from "@/components/ThemeIconButton";
 
+// const HUB_URL ='http://192.168.0.143:5207/chathub';
 const HUB_URL ='https://p32-native.itstep.click/chat';
 
 interface Message {
@@ -25,18 +22,16 @@ interface Message {
     timestamp: string;
 }
 
-export default function Chat() {
+export default function Mychat() {
     const [connection, setConnection] = useState<HubConnection | null>(null);
     const [isConnected, setIsConnected] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [messages, setMessages] = useState<Message[]>([]);
     const [inputText, setInputText] = useState<string>("");
-    const colorScheme = useColorScheme();
-    const isDark = colorScheme === "dark";
-    const styles = getStyles(isDark); // ← стилі тепер залежать від теми
 
     const flatListRef = useRef<FlatList>(null);
 
+    // 1. Manage SignalR Lifecycle
     useEffect(() => {
         const newConnection = new HubConnectionBuilder()
             .withUrl(HUB_URL)
@@ -51,6 +46,8 @@ export default function Chat() {
                 setIsConnected(true);
                 setIsLoading(false);
 
+                // 2. Set up event listener matching your C# hub method name
+                // newConnection.on("ReceiveMessage", (messageText: string) => {
                 newConnection.on("Send", (messageText: string) => {
                     const newMsg: Message = {
                         id: Math.random().toString(),
@@ -65,18 +62,23 @@ export default function Chat() {
                 setIsLoading(false);
             });
 
+        // Clean up connections when user leaves the page
         return () => {
             if (newConnection) {
+                // newConnection.off("ReceiveMessage");
                 newConnection.off("Send");
                 newConnection.stop();
             }
         };
     }, []);
 
+    // 3. Send Message to the Hub
     const handleSendMessage = async () => {
         if (!inputText.trim() || !connection || !isConnected) return;
 
         try {
+            // Calls public async Task SendMessage(string msg) in C# Hub
+            //   await connection.invoke("SendMessage", inputText);
             await connection.invoke("Send", inputText);
             setInputText("");
         } catch (error) {
@@ -87,15 +89,11 @@ export default function Chat() {
     if (isLoading) {
         return (
             <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color={isDark ? "#3b82f6" : "#0066cc"} />
+                <ActivityIndicator size="large" color="#0066cc" />
                 <Text style={styles.loadingText}>Connecting to chat live stream...</Text>
             </View>
         );
     }
-
-    const handleBack = async () => {
-        router.replace("/");
-    };
 
     return (
         <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
@@ -103,28 +101,16 @@ export default function Chat() {
                 style={{ flex: 1 }}
                 behavior={Platform.OS === "ios" ? "padding" : undefined}
             >
+                {/* Header Block */}
                 <View style={styles.header}>
-                    <View>
-                        <Pressable onPress={handleBack}>
-                            <Ionicons
-                                name="log-out-outline"
-                                size={22}
-                                color={isDark ? "#ffffff" : "#1f2937"}
-                            />
-                        </Pressable>
-                    </View>
-                    <View>
-                        <Text style={styles.headerTitle}>Live Chat</Text>
-                        <View style={styles.statusIndicator}>
-                            <View style={[styles.statusDot, { backgroundColor: isConnected ? "#4cd964" : "#ff3b30" }]} />
-                            <Text style={styles.statusText}>{isConnected ? "Connected" : "Disconnected"}</Text>
-                        </View>
-                    </View>
-                    <View>
-                        <ThemeIconButton size={22} />
+                    <Text style={styles.headerTitle}>Live Chat</Text>
+                    <View style={styles.statusIndicator}>
+                        <View style={[styles.statusDot, { backgroundColor: isConnected ? "#4cd964" : "#ff3b30" }]} />
+                        <Text style={styles.statusText}>{isConnected ? "Connected" : "Disconnected"}</Text>
                     </View>
                 </View>
 
+                {/* Message Thread List */}
                 <FlatList
                     ref={flatListRef}
                     data={messages}
@@ -139,11 +125,12 @@ export default function Chat() {
                     )}
                 />
 
+                {/* Text Entry Footer Bar */}
                 <SafeAreaView edges={['bottom']} style={styles.inputContainer}>
                     <TextInput
                         style={styles.input}
                         placeholder="Type your message..."
-                        placeholderTextColor={isDark ? "#71717a" : "#999"}
+                        placeholderTextColor="#999"
                         value={inputText}
                         onChangeText={setInputText}
                         multiline
@@ -161,28 +148,23 @@ export default function Chat() {
     );
 }
 
-// ← Стилі тепер генеруються функцією залежно від теми
-const getStyles = (isDark: boolean) => StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: isDark ? '#09090b' : '#f5f5f5',
+        backgroundColor: '#f5f5f5',
     },
     header: {
         paddingTop: 16,
         paddingHorizontal: 16,
         paddingBottom: 12,
-        backgroundColor: isDark ? '#18181b' : '#fff',
+        backgroundColor: '#fff',
         borderBottomWidth: 1,
-        borderBottomColor: isDark ? '#27272a' : '#e0e0e0',
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        borderBottomColor: '#e0e0e0',
     },
     headerTitle: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: isDark ? '#f4f4f5' : '#333',
+        color: '#333',
         marginBottom: 8,
     },
     statusIndicator: {
@@ -197,54 +179,54 @@ const getStyles = (isDark: boolean) => StyleSheet.create({
     },
     statusText: {
         fontSize: 14,
-        color: isDark ? '#a1a1aa' : '#666',
+        color: '#666',
     },
     messagesList: {
         paddingHorizontal: 12,
         paddingVertical: 8,
     },
     messageContainer: {
-        backgroundColor: isDark ? '#18181b' : '#fff',
+        backgroundColor: '#fff',
         borderRadius: 12,
         padding: 12,
         marginVertical: 4,
         maxWidth: '85%',
         alignSelf: 'flex-start',
         borderWidth: 1,
-        borderColor: isDark ? '#27272a' : '#e0e0e0',
+        borderColor: '#e0e0e0',
     },
     messageText: {
         fontSize: 16,
-        color: isDark ? '#f4f4f5' : '#333',
+        color: '#333',
         lineHeight: 22,
     },
     timestamp: {
         fontSize: 12,
-        color: isDark ? '#71717a' : '#999',
+        color: '#999',
         marginTop: 4,
     },
     inputContainer: {
         flexDirection: 'row',
         paddingHorizontal: 12,
         paddingVertical: 12,
-        backgroundColor: isDark ? '#18181b' : '#fff',
+        backgroundColor: '#fff',
         borderTopWidth: 1,
-        borderTopColor: isDark ? '#27272a' : '#e0e0e0',
+        borderTopColor: '#e0e0e0',
         alignItems: 'flex-end',
     },
     input: {
         flex: 1,
-        backgroundColor: isDark ? '#27272a' : '#f5f5f5',
+        backgroundColor: '#f5f5f5',
         borderRadius: 24,
         paddingHorizontal: 16,
         paddingVertical: 10,
         marginRight: 8,
         fontSize: 16,
-        color: isDark ? '#f4f4f5' : '#333',
+        color: '#333',
         maxHeight: 100,
     },
     sendButton: {
-        backgroundColor: isDark ? '#3b82f6' : '#0066cc',
+        backgroundColor: '#0066cc',
         borderRadius: 24,
         paddingHorizontal: 20,
         paddingVertical: 10,
@@ -260,11 +242,10 @@ const getStyles = (isDark: boolean) => StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: isDark ? '#09090b' : '#fff',
     },
     loadingText: {
         marginTop: 12,
         fontSize: 16,
-        color: isDark ? '#a1a1aa' : '#666',
+        color: '#666',
     },
 });

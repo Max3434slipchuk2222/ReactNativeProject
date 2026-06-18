@@ -30,10 +30,11 @@ function AppContent() {
 
         <ThemeProvider value={resolved === 'dark' ? DarkTheme : DefaultTheme}>
             <Stack>
-                <Stack.Screen name="(auth)" options={{headerShown: false}}/>
                 <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
-                <Stack.Screen name="chat" options={{ headerShown: false }} />
-                <Stack.Screen name="modal" options={{presentation: 'modal'}}/>
+                <Stack.Screen name="(auth)" options={{headerShown: false}}/>
+                <Stack.Screen name="mychat" options={{ headerShown: false }} />
+                {/*<Stack.Screen name="chat/home" options={{ headerShown: false }} />*/}
+                <Stack.Screen name="modal" options={{presentation: 'modal', title: 'Modal'}}/>
                 <Stack.Screen name="logger" options={{headerShown: false}}/>
             </Stack>
             <StatusBar style={resolved === 'dark' ? 'light' : 'dark'}/>
