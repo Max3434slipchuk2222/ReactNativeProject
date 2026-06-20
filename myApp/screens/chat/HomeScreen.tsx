@@ -71,7 +71,7 @@ export default function HomeScreen() {
 
                             <TouchableOpacity
                                 activeOpacity={0.85}
-                                onPress={() => console.log('Profile view')}
+                                onPress={() => router.push('/profile')}
                                 className="absolute bottom-1 right-1 w-12 h-12 rounded-full bg-emerald-500 items-center justify-center shadow-lg"
                             >
                                 <Text className="text-xl">✏️</Text>

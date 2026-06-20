@@ -10,6 +10,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function JoinScreen() {
     //Потрібно скинути кеш Query RTK
     const { data: chats, refetch } = useGetMyChatsQuery();
+    console.log("chats:", chats);
     const { user } = useAppSelector(s => s.auth);
 
     const [activeChatId, setActiveChatId] = useState<number | null>(null);

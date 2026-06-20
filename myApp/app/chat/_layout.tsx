@@ -20,7 +20,15 @@ export default function ChatLayout() {
         headerRight: () => <ThemeIconButton size={22} />,
         headerRightContainerStyle: { paddingRight: 16 },
     };
-
+    const backHeaderLeft = () => (
+        <Pressable onPress={() => router.back()} style={{ padding: 16 }}>
+            <Ionicons
+                name="arrow-back-outline"
+                size={22}
+                color={isDark ? "#ffffff" : "#1f2937"}
+            />
+        </Pressable>
+    );
     return (
         <SafeAreaProvider>
             <Stack screenOptions={{ headerShown: false }}>
@@ -38,15 +46,16 @@ export default function ChatLayout() {
                         ...commonHeaderOptions,
                         headerShown: true,
                         title: "Новий чат",
-                        headerLeft: () => (
-                            <Pressable onPress={() => router.back()} style={{ padding: 16 }}>
-                                <Ionicons
-                                    name="arrow-back-outline"
-                                    size={22}
-                                    color={isDark ? "#ffffff" : "#1f2937"}
-                                />
-                            </Pressable>
-                        ),
+                        headerLeft: backHeaderLeft,
+                    }}
+                />
+                <Stack.Screen
+                    name="join"
+                    options={{
+                        ...commonHeaderOptions,
+                        headerShown: true,
+                        title: "Чати",
+                        headerLeft: backHeaderLeft,
                     }}
                 />
             </Stack>

@@ -7,6 +7,7 @@ import type ILoginModel from "../models/ILoginModel.ts";
 import {serialize} from "object-to-formdata";
 import IMeModel from "@/models/IMeModel";
 import * as SecureStore from "expo-secure-store";
+import { IProfileUpdate } from "@/models/IProfileUpdate.js";
 
 export const authService = createApi({
     reducerPath: 'authApi',
@@ -56,6 +57,17 @@ export const authService = createApi({
             query: () => ({ url: "Logout", method: "POST" }),
             invalidatesTags: ["Auth"]
         }),
+        updateProfile: build.mutation<IMeModel, IProfileUpdate>({
+            query: (model) => {
+                const formData = serialize(model);
+                return {
+                    url: "EditProfile",
+                    method: "PUT",
+                    body: formData,
+                };
+            },
+            invalidatesTags: ["Auth"],
+        }),
     })
 })
 
@@ -63,4 +75,5 @@ export const {
     useRegisterMutation,
     useLoginMutation,
     useMeQuery,
+    useUpdateProfileMutation,
 } = authService;
