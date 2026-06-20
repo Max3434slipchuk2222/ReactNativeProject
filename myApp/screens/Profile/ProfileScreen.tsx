@@ -1,7 +1,7 @@
 import { View, Text, TextInput, Pressable, StatusBar, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { useMeQuery, useUpdateProfileMutation } from "@/service/AuthService";
 import { ImagePickerButton } from "@/components/form/ImagePickerButton";
 import { useForm } from "@/hooks/useForm";
@@ -22,6 +22,16 @@ export default function ProfileScreen() {
         email: me?.email ?? "",
         imageFile: null,
     });
+    useEffect(() => {
+        if (me) {
+            setForm(prev => ({
+                ...prev,
+                firstName: me.fullName?.split(" ")[0] ?? "",
+                lastName: me.fullName?.split(" ")[1] ?? "",
+                email: me.email ?? "",
+            }));
+        }
+    }, [me]);
 
     const pickImage = async () => {
         const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -55,8 +65,8 @@ export default function ProfileScreen() {
                 ...(form.imageFile ? { imageFile: form.imageFile } : {}),
             }).unwrap();
             router.back();
-        } catch (e) {
-            console.log("Update profile error:", e);
+        } catch (e: any) {
+            console.log("Update profile error:", JSON.stringify(e?.data, null, 2));
             alert("Помилка оновлення профілю");
         }
     };

@@ -6,13 +6,13 @@ import {useAppSelector, useAppDispatch} from "@/store";
 import {BASE_URL_IMAGES} from "@/api";
 import * as SecureStore from "expo-secure-store";
 import {logout} from "@/store/reducers/AuthSlice";
-import {authService} from "@/service/AuthService";
+import {authService, useMeQuery} from "@/service/AuthService";
 import {ThemeToggle} from "@/components/ThemeToogle";
 
 export default function HomeScreen() {
     const {user} = useAppSelector(state => state.auth);
     const dispatch = useAppDispatch();
-
+    const { data: me } = useMeQuery();
     const onLogout = async () => {
         await SecureStore.deleteItemAsync("accessToken");
         dispatch(logout());
@@ -47,7 +47,7 @@ export default function HomeScreen() {
                             className="text-4xl font-black text-zinc-900 dark:text-white tracking-tighter text-center">
                             Привіт,{" "}
                             <Text className="text-emerald-500">
-                                {user?.name ?? "Гість"}
+                                {me?.fullName ?? user?.name ?? "Гість"}
                             </Text>
                         </Text>
 
@@ -58,9 +58,9 @@ export default function HomeScreen() {
                         <View className="relative">
 
                             <View className="w-44 h-44 rounded-full bg-emerald-500/10 items-center justify-center overflow-hidden">
-                                {user?.image && BASE_URL_IMAGES ? (
+                                {me?.image ? (
                                     <Image
-                                        source={{uri: `${BASE_URL_IMAGES}400_${user.image}`}}
+                                        source={{uri: me.image}}
                                         className="w-full h-full"
                                         resizeMode="cover"
                                     />

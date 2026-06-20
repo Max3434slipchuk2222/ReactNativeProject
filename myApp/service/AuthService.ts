@@ -1,6 +1,6 @@
 import {createApi} from "@reduxjs/toolkit/query/react";
 import {fetchBaseQuery} from "@reduxjs/toolkit/query";
-import { BASE_URL } from "@/api";
+import {BASE_URL, BASE_URL_API} from "@/api";
 // import {serialize} from "object-to-formdata";
 import type IRegisterModel from "../models/IRegisterModel.ts";
 import type ILoginModel from "../models/ILoginModel.ts";
@@ -12,7 +12,7 @@ import { IProfileUpdate } from "@/models/IProfileUpdate.js";
 export const authService = createApi({
     reducerPath: 'authApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: `${BASE_URL}/Account/`,
+        baseUrl: `${BASE_URL_API}/Account/`,
         prepareHeaders: async (headers) => {
             const token = await SecureStore.getItemAsync("accessToken");
             if (token) {
@@ -46,10 +46,11 @@ export const authService = createApi({
         }),
         me: build.query<IMeModel, void>({
             query: () => ({ url: "Me", method: "GET" }),
+            providesTags: ["Auth"],
             transformResponse: (response: IMeModel) => ({
                 ...response,
                 image: response.image
-                    ? `${BASE_URL?.replace('/api', '')}/images/400_${response.image}`
+                    ? `${BASE_URL}/images/400_${response.image}`
                     : null,
             }),
         }),
