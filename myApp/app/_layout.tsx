@@ -13,6 +13,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {setThemeMode} from "@/store/reducers/ThemeSlice";
 import { useColorScheme as useNativeWindScheme } from 'nativewind';
 import {SafeAreaProvider, SafeAreaView} from "react-native-safe-area-context";
+import {KeyboardAvoidingView, Platform} from "react-native";
+import {useSyncAppearance} from "@/hooks/use-sync-appearance";
 
 function AppContent() {
     const themeMode = useAppSelector(s => s.themeReducer.mode);
@@ -26,18 +28,25 @@ function AppContent() {
     useEffect(() => {
         setColorScheme(resolved);
     }, [resolved]);
+    useSyncAppearance(resolved);
     return (
 
         <ThemeProvider value={resolved === 'dark' ? DarkTheme : DefaultTheme}>
-            <Stack>
-                <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
-                <Stack.Screen name="(auth)" options={{headerShown: false}}/>
-                <Stack.Screen name="mychat" options={{ headerShown: false }} />
-                <Stack.Screen name="chat" options={{ headerShown: false }} />
-                <Stack.Screen name="profile" options={{ headerShown: true, title: "Профіль" }} />
-                <Stack.Screen name="modal" options={{presentation: 'modal', title: 'Modal'}}/>
-                <Stack.Screen name="logger" options={{headerShown: false}}/>
-            </Stack>
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+            >
+                <Stack>
+                    <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
+                    <Stack.Screen name="(auth)" options={{headerShown: false}}/>
+                    <Stack.Screen name="mychat" options={{ headerShown: false }} />
+                    <Stack.Screen name="chat" options={{ headerShown: false }} />
+                    <Stack.Screen name="profile" options={{ headerShown: true, title: "Профіль" }} />
+                    <Stack.Screen name="modal" options={{presentation: 'modal', title: 'Modal'}}/>
+                    <Stack.Screen name="logger" options={{headerShown: false}}/>
+                </Stack>
+            </KeyboardAvoidingView>
             <StatusBar style={resolved === 'dark' ? 'light' : 'dark'}/>
         </ThemeProvider>
     );

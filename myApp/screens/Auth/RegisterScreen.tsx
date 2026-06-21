@@ -4,7 +4,7 @@ import {
     Platform,
     Pressable,
     ScrollView,
-    StatusBar
+    StatusBar, useColorScheme
 } from "react-native";
 import {useForm, Controller} from "react-hook-form";
 import {ImagePickerButton} from "@/components/form/ImagePickerButton";
@@ -32,7 +32,7 @@ export default function RegisterScreen() {
     const dispatch = useDispatch();
 
     const image = watch("imageFile");
-
+    const colorScheme = useColorScheme();
     const pickImage = async () => {
         // console.log("Pick image");
         const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -79,12 +79,6 @@ export default function RegisterScreen() {
 
         <View className="flex-1 bg-zinc-50 dark:bg-zinc-950">
             <StatusBar barStyle="default"/>
-
-            <KeyboardAvoidingView
-                style={{flex: 1}}
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
-                keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
-            >
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     keyboardShouldPersistTaps="handled"
@@ -116,6 +110,7 @@ export default function RegisterScreen() {
                                             placeholder="Ім’я"
                                             value={value}
                                             onChangeText={onChange}
+                                            keyboardAppearance={colorScheme === "dark" ? "dark" : "light"}
                                             className="w-full max-w-md bg-white dark:bg-zinc-800
                                                text-black dark:text-white
                                                rounded-lg px-4 py-3 mb-4
@@ -131,6 +126,7 @@ export default function RegisterScreen() {
                                             placeholder="Прізвище"
                                             value={value}
                                             onChangeText={onChange}
+                                            keyboardAppearance={colorScheme === "dark" ? "dark" : "light"}
                                             className="w-full max-w-md bg-white dark:bg-zinc-800
                                                text-black dark:text-white
                                                rounded-lg px-4 py-3 mb-4
@@ -147,6 +143,7 @@ export default function RegisterScreen() {
                                             keyboardType="email-address"
                                             value={value}
                                             onChangeText={onChange}
+                                            keyboardAppearance={colorScheme === "dark" ? "dark" : "light"}
                                             className="w-full max-w-md bg-white dark:bg-zinc-800
                                                text-black dark:text-white
                                                rounded-lg px-4 py-3 mb-4
@@ -163,6 +160,7 @@ export default function RegisterScreen() {
                                                    secureTextEntry
                                                    value={value}
                                                    onChangeText={onChange}
+                                                   keyboardAppearance={colorScheme === "dark" ? "dark" : "light"}
                                                    className="w-full max-w-md bg-white dark:bg-zinc-800 text-black dark:text-white rounded-lg px-4 py-3 mb-6 border border-gray-300 dark:border-zinc-700"
                                         />
                                     )}
@@ -178,7 +176,6 @@ export default function RegisterScreen() {
                         </Pressable>
                     </View>
                 </ScrollView>
-            </KeyboardAvoidingView>
         </View>
     );
 }

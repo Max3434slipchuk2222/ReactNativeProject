@@ -1,4 +1,14 @@
-import { View, Text, TextInput, Pressable, StatusBar, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
+import {
+    View,
+    Text,
+    TextInput,
+    Pressable,
+    StatusBar,
+    ScrollView,
+    KeyboardAvoidingView,
+    Platform,
+    useColorScheme
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import {useEffect, useState} from "react";
@@ -10,7 +20,7 @@ import * as ImagePicker from "expo-image-picker";
 export default function ProfileScreen() {
     const { data: me, isLoading: meLoading } = useMeQuery();
     const [updateProfile, { isLoading: saving }] = useUpdateProfileMutation();
-
+    const colorScheme = useColorScheme();
     const { form, setForm, onChange } = useForm<{
         firstName: string;
         lastName: string;
@@ -82,10 +92,6 @@ export default function ProfileScreen() {
     return (
         <View className="flex-1 bg-zinc-50 dark:bg-zinc-950">
             <StatusBar barStyle="default" />
-            <KeyboardAvoidingView
-                style={{ flex: 1 }}
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
-            >
                 <SafeAreaView edges={['bottom', 'left', 'right']} className="flex-1">
                     <ScrollView
                         keyboardShouldPersistTaps="handled"
@@ -106,6 +112,7 @@ export default function ProfileScreen() {
                             placeholder="Ім'я"
                             value={form.firstName}
                             onChangeText={onChange("firstName")}
+                            keyboardAppearance={colorScheme === "dark" ? "dark" : "light"}
                             className="w-full bg-white dark:bg-zinc-800 text-black dark:text-white rounded-lg px-4 py-3 mb-4 border border-gray-300 dark:border-zinc-700"
                         />
 
@@ -113,6 +120,7 @@ export default function ProfileScreen() {
                             placeholder="Прізвище"
                             value={form.lastName}
                             onChangeText={onChange("lastName")}
+                            keyboardAppearance={colorScheme === "dark" ? "dark" : "light"}
                             className="w-full bg-white dark:bg-zinc-800 text-black dark:text-white rounded-lg px-4 py-3 mb-4 border border-gray-300 dark:border-zinc-700"
                         />
                         <TextInput
@@ -120,6 +128,7 @@ export default function ProfileScreen() {
                             keyboardType="email-address"
                             value={form.email}
                             onChangeText={onChange("email")}
+                            keyboardAppearance={colorScheme === "dark" ? "dark" : "light"}
                             className="w-full bg-white dark:bg-zinc-800 text-black dark:text-white rounded-lg px-4 py-3 mb-6 border border-gray-300 dark:border-zinc-700"
                         />
 
@@ -136,7 +145,6 @@ export default function ProfileScreen() {
                         </Pressable>
                     </ScrollView>
                 </SafeAreaView>
-            </KeyboardAvoidingView>
         </View>
     );
 }

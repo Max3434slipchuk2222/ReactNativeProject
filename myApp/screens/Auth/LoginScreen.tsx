@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Pressable } from "react-native";
+import {View, Text, TextInput, Pressable, useColorScheme} from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import {useRouter} from "expo-router";
 import {loginSuccess} from "@/store/reducers/AuthSlice";
@@ -15,7 +15,7 @@ export default function LoginScreen() {
     const [serverError, setServerError] = useState<string | null>(null);
     const dispatch = useAppDispatch();
     const router = useRouter();
-
+    const colorScheme = useColorScheme();
     const onSubmit = async (data: ILoginModel) => {
         console.log("Form data:", data);
         try {
@@ -74,6 +74,7 @@ export default function LoginScreen() {
                             <TextInput
                                 placeholder="Email"
                                 keyboardType="email-address"
+                                keyboardAppearance={colorScheme === "dark" ? "dark" : "light"}
                                 value={value}
                                 onChangeText={onChange}
                                 placeholderClassName={"text-gray-600"}
@@ -89,6 +90,7 @@ export default function LoginScreen() {
                             <TextInput placeholder="Пароль"
                                        secureTextEntry
                                        value={value}
+                                       keyboardAppearance={colorScheme === "dark" ? "dark" : "light"}
                                        onChangeText={onChange}
                                        className="w-full max-w-md bg-white dark:bg-zinc-800 text-black dark:text-white rounded-lg px-4 py-3 mb-4 border border-gray-300 dark:border-zinc-700"
                             />

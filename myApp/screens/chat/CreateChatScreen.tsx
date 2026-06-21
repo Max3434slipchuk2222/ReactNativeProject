@@ -6,7 +6,7 @@ import {
     TouchableOpacity,
     ScrollView,
     KeyboardAvoidingView,
-    Platform,
+    Platform, useColorScheme,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
@@ -81,124 +81,119 @@ export default function CreateChatScreen() {
             />
 
             <SafeAreaView className="flex-1 p-6">
-                <KeyboardAvoidingView
-                    style={{ flex: 1 }}
-                    behavior={Platform.OS === "ios" ? "padding" : "height"}
+                <ScrollView
+                    keyboardShouldPersistTaps="handled"
+                    contentContainerStyle={{ paddingBottom: 40 }}
                 >
-                    <ScrollView
-                        keyboardShouldPersistTaps="handled"
-                        contentContainerStyle={{ paddingBottom: 40 }}
-                    >
 
-                        <View className="items-center mt-4">
-                            <Text className="text-4xl font-black text-zinc-900 dark:text-white tracking-tighter">
-                                Новий чат
-                            </Text>
-                            <View className="h-[2px] w-12 bg-emerald-500 my-6 rounded-full" />
-                            <Text className="text-zinc-500 dark:text-zinc-400 text-center text-lg">
-                                Оберіть тип та учасників
-                            </Text>
-                        </View>
+                    <View className="items-center mt-4">
+                        <Text className="text-4xl font-black text-zinc-900 dark:text-white tracking-tighter">
+                            Новий чат
+                        </Text>
+                        <View className="h-[2px] w-12 bg-emerald-500 my-6 rounded-full" />
+                        <Text className="text-zinc-500 dark:text-zinc-400 text-center text-lg">
+                            Оберіть тип та учасників
+                        </Text>
+                    </View>
 
-                        <View className="mt-8">
-                            <InputField
-                                placeholder="Назва чату"
-                                value={form.name}
-                                onChangeText={onChange("name")}
-                            />
-                        </View>
+                    <View className="mt-8">
+                        <InputField
+                            placeholder="Назва чату"
+                            value={form.name}
+                            onChangeText={onChange("name")}
+                        />
+                    </View>
 
-                        <View className="mt-8">
-                            <Text className="text-zinc-600 dark:text-zinc-400 mb-2 font-medium">
-                                Тип чату
-                            </Text>
+                    <View className="mt-8">
+                        <Text className="text-zinc-600 dark:text-zinc-400 mb-2 font-medium">
+                            Тип чату
+                        </Text>
 
-                            <View className="flex-row gap-3">
-                                {chatTypes?.map(type => (
-                                    <TouchableOpacity
-                                        key={type.id}
-                                        onPress={() =>
-                                            setForm(prev => ({
-                                                ...prev,
-                                                chatTypeId: type.id,
-                                                userIds: [],
-                                            }))
+                        <View className="flex-row gap-3">
+                            {chatTypes?.map(type => (
+                                <TouchableOpacity
+                                    key={type.id}
+                                    onPress={() =>
+                                        setForm(prev => ({
+                                            ...prev,
+                                            chatTypeId: type.id,
+                                            userIds: [],
+                                        }))
+                                    }
+                                    className={`px-4 py-3 rounded-xl border
+                                        ${form.chatTypeId === type.id
+                                        ? "bg-emerald-500 border-emerald-500"
+                                        : "border-zinc-300 dark:border-zinc-700"}
+                                    `}
+                                >
+                                    <Text
+                                        className={
+                                            form.chatTypeId === type.id
+                                                ? "text-white font-semibold"
+                                                : "text-zinc-700 dark:text-zinc-300"
                                         }
+                                    >
+                                        {type.typeName}
+                                    </Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    </View>
+
+                    <View className="mt-8">
+                        <Text className="text-zinc-600 dark:text-zinc-400 mb-2 font-medium">
+                            Учасники
+                        </Text>
+
+                        <View className="gap-2">
+                            {users?.map(user => {
+                                const selected = form.userIds.includes(user.id);
+
+                                return (
+                                    <TouchableOpacity
+                                        key={user.id}
+                                        onPress={() => toggleUser(user.id)}
                                         className={`px-4 py-3 rounded-xl border
-                                            ${form.chatTypeId === type.id
+                                            ${selected
                                             ? "bg-emerald-500 border-emerald-500"
                                             : "border-zinc-300 dark:border-zinc-700"}
                                         `}
                                     >
                                         <Text
                                             className={
-                                                form.chatTypeId === type.id
+                                                selected
                                                     ? "text-white font-semibold"
-                                                    : "text-zinc-700 dark:text-zinc-300"
+                                                    : "text-zinc-800 dark:text-zinc-200"
                                             }
                                         >
-                                            {type.typeName}
+                                            {user.name}
                                         </Text>
                                     </TouchableOpacity>
-                                ))}
-                            </View>
+                                );
+                            })}
                         </View>
 
-                        <View className="mt-8">
-                            <Text className="text-zinc-600 dark:text-zinc-400 mb-2 font-medium">
-                                Учасники
+                        {isPrivate && (
+                            <Text className="text-xs text-zinc-400 mt-2">
+                                Приватний чат — лише один учасник
                             </Text>
+                        )}
+                    </View>
 
-                            <View className="gap-2">
-                                {users?.map(user => {
-                                    const selected = form.userIds.includes(user.id);
+                    <View className="mt-10">
+                        <TouchableOpacity
+                            className="bg-emerald-500 py-5 rounded-2xl items-center shadow-md"
+                            activeOpacity={0.85}
+                            onPress={onSubmit}
+                            disabled={isLoading}
+                        >
+                            <Text className="text-white text-xl font-bold">
+                                {isLoading ? "Створення..." : "Створити чат"}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
 
-                                    return (
-                                        <TouchableOpacity
-                                            key={user.id}
-                                            onPress={() => toggleUser(user.id)}
-                                            className={`px-4 py-3 rounded-xl border
-                                                ${selected
-                                                ? "bg-emerald-500 border-emerald-500"
-                                                : "border-zinc-300 dark:border-zinc-700"}
-                                            `}
-                                        >
-                                            <Text
-                                                className={
-                                                    selected
-                                                        ? "text-white font-semibold"
-                                                        : "text-zinc-800 dark:text-zinc-200"
-                                                }
-                                            >
-                                                {user.name}
-                                            </Text>
-                                        </TouchableOpacity>
-                                    );
-                                })}
-                            </View>
-
-                            {isPrivate && (
-                                <Text className="text-xs text-zinc-400 mt-2">
-                                    Приватний чат — лише один учасник
-                                </Text>
-                            )}
-                        </View>
-
-                        <View className="mt-10">
-                            <TouchableOpacity
-                                className="bg-emerald-500 py-5 rounded-2xl items-center shadow-md"
-                                activeOpacity={0.85}
-                                onPress={onSubmit}
-                                disabled={isLoading}
-                            >
-                                <Text className="text-white text-xl font-bold">
-                                    {isLoading ? "Створення..." : "Створити чат"}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-
-                    </ScrollView>
-                </KeyboardAvoidingView>
+                </ScrollView>
             </SafeAreaView>
         </View>
     );

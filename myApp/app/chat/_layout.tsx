@@ -6,6 +6,7 @@ import { Colors } from "@/constants/theme";
 import { Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useLogout } from "@/hooks/use-logout";
+import {KeyboardAvoidingView, Platform} from "react-native";
 
 export default function ChatLayout() {
     const colorScheme = useColorScheme();
@@ -31,34 +32,40 @@ export default function ChatLayout() {
     );
     return (
         <SafeAreaProvider>
-            <Stack screenOptions={{ headerShown: false }}>
-                <Stack.Screen
-                    name="home"
-                    options={{
-                        ...commonHeaderOptions,
-                        headerShown: true,
-                        title: "chat",
-                    }}
-                />
-                <Stack.Screen
-                    name="create"
-                    options={{
-                        ...commonHeaderOptions,
-                        headerShown: true,
-                        title: "Новий чат",
-                        headerLeft: backHeaderLeft,
-                    }}
-                />
-                <Stack.Screen
-                    name="join"
-                    options={{
-                        ...commonHeaderOptions,
-                        headerShown: true,
-                        title: "Чати",
-                        headerLeft: backHeaderLeft,
-                    }}
-                />
-            </Stack>
+            <KeyboardAvoidingView
+                style={{flex: 1}}
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+            >
+                <Stack screenOptions={{ headerShown: false }}>
+                    <Stack.Screen
+                        name="home"
+                        options={{
+                            ...commonHeaderOptions,
+                            headerShown: true,
+                            title: "chat",
+                        }}
+                    />
+                    <Stack.Screen
+                        name="create"
+                        options={{
+                            ...commonHeaderOptions,
+                            headerShown: true,
+                            title: "Новий чат",
+                            headerLeft: backHeaderLeft,
+                        }}
+                    />
+                    <Stack.Screen
+                        name="join"
+                        options={{
+                            ...commonHeaderOptions,
+                            headerShown: true,
+                            title: "Чати",
+                            headerLeft: backHeaderLeft,
+                        }}
+                    />
+                </Stack>
+            </KeyboardAvoidingView>
         </SafeAreaProvider>
     );
 }

@@ -97,53 +97,48 @@ export default function Mychat() {
 
     return (
         <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
-            <KeyboardAvoidingView
-                style={{ flex: 1 }}
-                behavior={Platform.OS === "ios" ? "padding" : undefined}
-            >
-                {/* Header Block */}
-                <View style={styles.header}>
-                    <Text style={styles.headerTitle}>Live Chat</Text>
-                    <View style={styles.statusIndicator}>
-                        <View style={[styles.statusDot, { backgroundColor: isConnected ? "#4cd964" : "#ff3b30" }]} />
-                        <Text style={styles.statusText}>{isConnected ? "Connected" : "Disconnected"}</Text>
-                    </View>
+            {/* Header Block */}
+            <View style={styles.header}>
+                <Text style={styles.headerTitle}>Live Chat</Text>
+                <View style={styles.statusIndicator}>
+                    <View style={[styles.statusDot, { backgroundColor: isConnected ? "#4cd964" : "#ff3b30" }]} />
+                    <Text style={styles.statusText}>{isConnected ? "Connected" : "Disconnected"}</Text>
                 </View>
+            </View>
 
-                {/* Message Thread List */}
-                <FlatList
-                    ref={flatListRef}
-                    data={messages}
-                    keyExtractor={(item) => item.id}
-                    contentContainerStyle={styles.messagesList}
-                    onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
-                    renderItem={({ item }) => (
-                        <View style={styles.messageContainer}>
-                            <Text style={styles.messageText}>{item.text}</Text>
-                            <Text style={styles.timestamp}>{item.timestamp}</Text>
-                        </View>
-                    )}
+            {/* Message Thread List */}
+            <FlatList
+                ref={flatListRef}
+                data={messages}
+                keyExtractor={(item) => item.id}
+                contentContainerStyle={styles.messagesList}
+                onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
+                renderItem={({ item }) => (
+                    <View style={styles.messageContainer}>
+                        <Text style={styles.messageText}>{item.text}</Text>
+                        <Text style={styles.timestamp}>{item.timestamp}</Text>
+                    </View>
+                )}
+            />
+
+            {/* Text Entry Footer Bar */}
+            <SafeAreaView edges={['bottom']} style={styles.inputContainer}>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Type your message..."
+                    placeholderTextColor="#999"
+                    value={inputText}
+                    onChangeText={setInputText}
+                    multiline
                 />
-
-                {/* Text Entry Footer Bar */}
-                <SafeAreaView edges={['bottom']} style={styles.inputContainer}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Type your message..."
-                        placeholderTextColor="#999"
-                        value={inputText}
-                        onChangeText={setInputText}
-                        multiline
-                    />
-                    <TouchableOpacity
-                        style={[styles.sendButton, { opacity: inputText.trim() ? 1 : 0.6 }]}
-                        onPress={handleSendMessage}
-                        disabled={!inputText.trim()}
-                    >
-                        <Text style={styles.sendButtonText}>Send</Text>
-                    </TouchableOpacity>
-                </SafeAreaView>
-            </KeyboardAvoidingView>
+                <TouchableOpacity
+                    style={[styles.sendButton, { opacity: inputText.trim() ? 1 : 0.6 }]}
+                    onPress={handleSendMessage}
+                    disabled={!inputText.trim()}
+                >
+                    <Text style={styles.sendButtonText}>Send</Text>
+                </TouchableOpacity>
+            </SafeAreaView>
         </SafeAreaView>
     );
 }
