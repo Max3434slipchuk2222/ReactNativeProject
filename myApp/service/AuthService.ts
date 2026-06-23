@@ -8,6 +8,7 @@ import {serialize} from "object-to-formdata";
 import IMeModel from "@/models/IMeModel";
 import * as SecureStore from "expo-secure-store";
 import { IProfileUpdate } from "@/models/IProfileUpdate.js";
+import IForgotPasswordModel from "@/models/IForgotPasswordModel";
 
 export const authService = createApi({
     reducerPath: 'authApi',
@@ -69,6 +70,13 @@ export const authService = createApi({
             },
             invalidatesTags: ["Auth"],
         }),
+        forgotPassword: build.mutation<void, IForgotPasswordModel>({
+            query: (model) => ({
+                url: 'ForgotPassword',
+                method: 'POST',
+                body: model
+            })
+        }),
     })
 })
 
@@ -77,4 +85,5 @@ export const {
     useLoginMutation,
     useMeQuery,
     useUpdateProfileMutation,
+    useForgotPasswordMutation,
 } = authService;

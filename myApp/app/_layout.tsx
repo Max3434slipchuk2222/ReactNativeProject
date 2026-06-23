@@ -42,7 +42,7 @@ function AppContent() {
                     <Stack.Screen name="(auth)" options={{headerShown: false}}/>
                     <Stack.Screen name="mychat" options={{ headerShown: false }} />
                     <Stack.Screen name="chat" options={{ headerShown: false }} />
-                    <Stack.Screen name="profile" options={{ headerShown: true, title: "Профіль" }} />
+                    <Stack.Screen name="(profile)" options={{ headerShown: true, title: "Профіль" }} />
                     <Stack.Screen name="modal" options={{presentation: 'modal', title: 'Modal'}}/>
                     <Stack.Screen name="logger" options={{headerShown: false}}/>
                 </Stack>

@@ -1,4 +1,4 @@
-import {View, Text, TextInput, Pressable, useColorScheme} from "react-native";
+import {View, Text, TextInput, Pressable, useColorScheme, TouchableOpacity} from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import {useRouter} from "expo-router";
 import {loginSuccess} from "@/store/reducers/AuthSlice";
@@ -102,6 +102,14 @@ export default function LoginScreen() {
             >
                 <Text className="text-white font-semibold">Увійти</Text>
             </Pressable>
+            <TouchableOpacity
+                className="mb-6 mt-2"
+                onPress={() => router.push('/forgot-password')}
+            >
+                <Text className="font-spartan-semibold text-[13px] text-[#093030] dark:text-[#DFF7E2]">
+                    Forgot Password?
+                </Text>
+            </TouchableOpacity>
         </View>
     );
 }
