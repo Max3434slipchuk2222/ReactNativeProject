@@ -1,10 +1,8 @@
 import { View, Text, TextInput, Pressable, TouchableOpacity } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import {useRouter} from "expo-router";
-import {loginSuccess} from "@/store/reducers/AuthSlice";
 import {useAppDispatch} from "@/hooks/redux";
 import {useState} from "react";
-import * as SecureStore from 'expo-secure-store';
 import {useForgotPasswordMutation} from "@/service/AuthService";
 import IForgotPasswordModel from "@/models/IForgotPasswordModel";
 
@@ -20,20 +18,17 @@ export default function ForgotPasswordScreen() {
         console.log("Form data:", data);
         try {
             await forgotPassword(data).unwrap();
+            setTimeout(() => router.push('/reset-password'), 1500);
         }
         catch (err: any) {
-            console.error("Помилка авторизації:", err);
-
-            // 1. Check if the backend returned a validation/error message payload
-            if (err?.data?.message) {
+            if (err?.data?.errors?.email?.[0]?.includes('mail rate') ||
+                err?.data?.isValid === false) {
+                setServerError("Забагато спроб. Спробуйте через кілька хвилин.");
+            } else if (err?.data?.message) {
                 setServerError(err.data.message);
-            }
-            // 2. Check if it's a top-level RTK Query network fetch error
-            else if (err?.status === 'FETCH_ERROR') {
+            } else if (err?.status === 'FETCH_ERROR') {
                 setServerError("Немає зв'язку з сервером. Перевірте інтернет.");
-            }
-            // 3. Fallback for any other unexpected status codes
-            else {
+            } else {
                 setServerError("Щось пішло не так. Спробуйте пізніше.");
             }
         }
@@ -45,7 +40,7 @@ export default function ForgotPasswordScreen() {
     // }
 
     return (
-        <View className="flex-1 justify-center bg-zinc-50 items-center px-6">
+        <View className="flex-1 justify-center bg-zinc-50 dark:bg-zinc-950 items-center px-6">
             <Text className="text-3xl font-bold text-blue-600 mb-8">
                 Відновлення пароля
             </Text>
