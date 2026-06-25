@@ -1,7 +1,7 @@
 import {KeyboardAvoidingView, Platform, View} from "react-native";
 import {Slot, Stack} from "expo-router";
 import {AuthTabs} from "@/components/auth/AuthTabs";
-import {SafeAreaView} from "react-native-safe-area-context";
+import {ThemeIconButton} from "@/components/ThemeIconButton";
 
 export default function AuthLayout() {
     return (
@@ -12,6 +12,9 @@ export default function AuthLayout() {
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                     keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
                 >
+                    <View className="items-end mt-8">
+                        <ThemeIconButton size={22}/>
+                    </View>
                     <Slot/>
                     <AuthTabs/>
                 </KeyboardAvoidingView>

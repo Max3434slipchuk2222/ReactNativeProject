@@ -5,7 +5,7 @@ import {useAppDispatch} from "@/hooks/redux";
 import {useState} from "react";
 import {useForgotPasswordMutation} from "@/service/AuthService";
 import IForgotPasswordModel from "@/models/IForgotPasswordModel";
-
+import * as SecureStore from 'expo-secure-store';
 
 export default function ForgotPasswordScreen() {
     const { control, handleSubmit } = useForm<IForgotPasswordModel>();
@@ -18,7 +18,8 @@ export default function ForgotPasswordScreen() {
         console.log("Form data:", data);
         try {
             await forgotPassword(data).unwrap();
-            setTimeout(() => router.push('/reset-password'), 1500);
+            await SecureStore.setItemAsync("resetEmail", data.email);
+            setTimeout(() => router.push('/verify-code'), 1500);
         }
         catch (err: any) {
             if (err?.data?.errors?.email?.[0]?.includes('mail rate') ||
@@ -62,12 +63,19 @@ export default function ForgotPasswordScreen() {
                                 keyboardType="email-address"
                                 value={value}
                                 onChangeText={onChange}
-                                placeholderClassName={"text-gray-600"}
-                                className="w-full max-w-md bg-white rounded-lg px-4 py-3 mb-4 border border-gray-300"
+                                placeholderClassName={"text-gray-300 dark:text-white"}
+                                className="w-full max-w-md bg-white rounded-lg px-4 py-3 mb-4 border border-gray-300 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
                             />
                         )}
             />
-
+            <TouchableOpacity
+                className="mb-1 mt-1"
+                onPress={() => router.replace('/login')}
+            >
+                <Text className="font-spartan-semibold text-[13px] text-[#093030] dark:text-[#DFF7E2]">
+                    Повернутися до логіну
+                </Text>
+            </TouchableOpacity>
 
             <View className="items-center w-full mt-4">
                 <Pressable onPress={handleSubmit(onSubmit)}
@@ -76,14 +84,7 @@ export default function ForgotPasswordScreen() {
                     <Text className="text-white font-semibold">Надіслати</Text>
                 </Pressable>
 
-                <TouchableOpacity
-                    className="mb-6 mt-2"
-                    onPress={() => router.replace('/login')}
-                >
-                    <Text className="font-spartan-semibold text-[13px] text-[#093030] dark:text-[#DFF7E2]">
-                        Повернутися до логіну
-                    </Text>
-                </TouchableOpacity>
+
             </View>
 
         </View>

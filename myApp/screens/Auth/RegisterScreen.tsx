@@ -89,7 +89,7 @@ export default function RegisterScreen() {
                 >
 
                     <View className="items-center px-6">
-                        <Text className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-8">
+                        <Text className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-8 mt-9">
                             Реєстрація користувача
                         </Text>
 
